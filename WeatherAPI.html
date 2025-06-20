@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <title>Weather Forecast</title>
+  <style>
+    body {
+      background-color: #4facfe;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-size: cover;
+      background-position: center;
+      transition: background-image 0.5s ease-in-out;
+      min-height: 100vh;
+      padding-bottom: 50px;
+    }
+
+    h1 {
+      color: white;
+      margin-top: 20px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 30px;
+      margin: 50px auto;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 900px;
+      backdrop-filter: blur(10px);
+      color: white;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    input {
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: bold;
+      width: 80%;
+      max-width: 400px;
+      border: none;
+      outline: none;
+      margin-bottom: 15px;
+    }
+
+    button {
+      color: #007bff;
+      border-radius: 10px;
+      padding: 10px 20px;
+      background-color: #ffffff;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+    }
+
+    button:hover {
+      background-color: #e0e0e0;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .forecast-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 30px;
+      overflow-x: auto;
+      padding-bottom: 20px;
+    }
+
+    .forecast-day {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 15px;
+      min-width: 120px;
+      backdrop-filter: blur(5px);
+      flex: 1;
+      max-width: 150px;
+    }
+
+    .forecast-day h3 {
+      margin-top: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      padding-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .forecast-icon {
+      width: 40px;
+      height: 40px;
+      margin: 5px auto;
+    }
+
+    .location {
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+
+    @media (max-width: 768px) {
+      .forecast-container {
+        justify-content: flex-start;
+      }
+      .forecast-day {
+        min-width: 110px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Weather 5cast</h1>
+
+    <input type="text" id="cityinput" placeholder="Enter a city" autocomplete="off" />
+    <br>
+    <button onclick="weatherdata()">Get Forecast</button>
+
+    <div id="result"></div>
+  </div>
+
+<script>
+  const weatherApiKey = "8dbc79dcce6146d99d963154250206";
+  const googleApiKey = "AIzaSyAWcpOaXgv8b_WTlWS_cfVk-GeKqvtpaZU";
+  const cx = "f2089f2c56fa74b00";
+
+  async function fetchCityImage(city) {
+    const query = `${city} cityscape`;
+    const url = `https://www.googleapis.com/customsearch/v1?key=${googleApiKey}&cx=${cx}&searchType=image&q=${encodeURIComponent(query)}&num=1`;
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      
+      if (data.items && data.items.length > 0) {
+        const imageUrl = data.items[0].link;
+        document.body.style.backgroundImage = `url(${imageUrl})`;
+      } else {
+        console.log("No images found for this city");
+        document.body.style.backgroundImage = "linear-gradient(to bottom, #4facfe, #00f2fe)";
+      }
+    } catch (error) {
+      console.error("Failed to fetch city image:", error);
+      document.body.style.backgroundImage = "linear-gradient(to bottom, #4facfe, #00f2fe)";
+    }
+  }
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  }
+
+  async function weatherdata() {
+    const city = document.getElementById("cityinput").value.trim();
+    const resultElement = document.getElementById("result");
+
+    if (!city) {
+      resultElement.innerHTML = "<p style='color:#ffcccc'>Please enter a city name.</p>";
+      return;
+    }
+
+    resultElement.innerHTML = "<p>Loading forecast data...</p>";
+    
+    try {
+      const forecastUrl = `https://api.weatherapi.com/v1/forecast.json?key=${weatherApiKey}&q=${encodeURIComponent(city)}&days=5`;
+      const response = await fetch(forecastUrl);
+      const data = await response.json();
+
+      if (data.error) {
+        throw new Error(data.error.message);
+      }
+
+      // Display location
+      const locationHtml = `
+        <div class="location">
+          <h2>${data.location.name}, ${data.location.country}</h2>
+        </div>
+      `;
+
+      // Display 5-day forecast in a row
+      let forecastHtml = '<div class="forecast-container">';
+      
+      data.forecast.forecastday.forEach(day => {
+        forecastHtml += `
+          <div class="forecast-day">
+            <h3>${formatDate(day.date)}</h3>
+            <img src="https:${day.day.condition.icon}" alt="${day.day.condition.text}" class="forecast-icon">
+            <p><strong>${day.day.maxtemp_c}°</strong> / ${day.day.mintemp_c}°</p>
+            <p>${day.day.avgtemp_c}°C</p>
+            <p>${day.day.condition.text}</p>
+          </div>
+        `;
+      });
+      
+      forecastHtml += '</div>';
+
+      resultElement.innerHTML = locationHtml + forecastHtml;
+      fetchCityImage(city);
+    } catch (error) {
+      resultElement.innerHTML = `<p style='color:#ffcccc'>Error: ${error.message}</p>`;
+      console.error("Forecast fetch error:", error);
+    }
+  }
+
+  // Allow pressing Enter key to trigger weather search
+  document.getElementById("cityinput").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+      weatherdata();
+    }
+  });
+</script>
+</body>
+</html>
