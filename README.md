@@ -1,31 +1,27 @@
 # 🌤️ Global Weather Dashboard
 
-A responsive web application that displays real-time weather data for cities worldwide. Built with HTML, CSS, and JavaScript, the app fetches data from the OpenWeatherMap API and dynamically updates background images using the Google Custom Search API to reflect the searched city.
+A responsive web application that displays real-time weather data for cities 🌍 around the world. Built using HTML, CSS, and JavaScript, it fetches current weather details using the 🔗 [OpenWeatherMap API](https://openweathermap.org/api) and updates city-based background images via the 🖼️ [Google Custom Search API](https://programmablesearchengine.google.com/about/).
 
 ---
 
-## 🚀 Features
+## ✨ Features
 
-- 🔎 **City-Based Weather Search**  
-  Search any global city and get up-to-date weather information in real-time.
-
-- 🌇 **Dynamic Backgrounds**  
-  Uses Google Custom Search API to fetch visually relevant background images for the searched city.
-
-- 📈 **Auto-Scrolling Updates**  
-  Smooth city-wise auto-scrolling for continuously updating weather display.
-
-- 🧠 **Intuitive Input Handling**  
-  Clean and user-friendly interface with responsive search behavior and error handling.
+- 🔍 **Search Any City** – Get real-time weather data instantly 🌡️
+- 🖼️ **Dynamic Backgrounds** – Stunning backgrounds that match the searched city
+- 🧭 **Auto-Scrolling** – Continuous city-wise updates for a dynamic display
+- 🎯 **User-Friendly Interface** – Simple, intuitive design with smooth input handling
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** HTML, CSS, JavaScript  
-- **APIs Used:**  
-  - [OpenWeatherMap API](https://openweathermap.org/api) — for real-time weather data  
-  - [Google Custom Search API](https://programmablesearchengine.google.com/about/) — for city background images
+- 💻 **Frontend:** HTML5, CSS3, JavaScript
+- 🌐 **APIs Used:**
+  - 🔗 [OpenWeatherMap API](https://openweathermap.org/api)
+  - 🔍 [Google Custom Search API](https://programmablesearchengine.google.com/about/)
+
+---
+
 
 
 
